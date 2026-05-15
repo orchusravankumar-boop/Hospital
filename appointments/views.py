@@ -203,6 +203,7 @@ def appointment_page(request):
         'ai_mode': True,
         'doctor': None,
         'recommended_doctors': recommended_doctors,
+        'recommended_doctor_count': recommended_doctors.count(),
         'recommended_department': recommended_department,
         'selected_doctor': recommended_doctors.first(),
         'doctors': doctors,

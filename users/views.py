@@ -2,10 +2,39 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from appointments.models import Appointment
 from doctors.models import Doctor
 from doctors.seed_data import seed_default_doctors_and_staff
+from patients.models import Patient
+
+
+def save_patient_profile(user):
+    if user.is_staff:
+        return None
+
+    patient, _ = Patient.objects.update_or_create(
+        user=user,
+        defaults={
+            'username': user.username,
+            'name': user.get_full_name() or user.username,
+            'email': user.email,
+        }
+    )
+
+    return patient
+
+
+def record_patient_login(user):
+    patient = save_patient_profile(user)
+
+    if not patient:
+        return
+
+    patient.last_login_at = timezone.now()
+    patient.login_count += 1
+    patient.save(update_fields=['last_login_at', 'login_count'])
 
 
 def normalize_doctor_username(username):
@@ -100,6 +129,7 @@ def signup(request):
         )
 
         login(request, user)
+        record_patient_login(user)
 
         return redirect('/')
 
@@ -159,6 +189,8 @@ def login_view(request):
             if user.is_staff and user.username.startswith("DOC"):
 
                 return redirect('/doctors/dashboard/')
+
+            record_patient_login(user)
 
             return redirect('/')
 
