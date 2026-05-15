@@ -16,6 +16,16 @@ class Appointment(models.Model):
 
     age = models.IntegerField()
 
+    appointment_date = models.DateField(
+        blank=True,
+        null=True
+    )
+
+    appointment_time = models.TimeField(
+        blank=True,
+        null=True
+    )
+
     doctor = models.ForeignKey(
         'doctors.Doctor',
         on_delete=models.CASCADE

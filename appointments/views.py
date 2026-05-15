@@ -219,6 +219,8 @@ def confirm_appointment(request):
         phone = request.POST.get('phone')
         email = request.POST.get('email')
         age = request.POST.get('age')
+        appointment_date = request.POST.get('appointment_date')
+        appointment_time = request.POST.get('appointment_time')
 
         doctor = Doctor.objects.get(id=doctor_id)
 
@@ -227,6 +229,8 @@ def confirm_appointment(request):
             patient_name=patient_name,
             phone=phone,
             age=age,
+            appointment_date=appointment_date,
+            appointment_time=appointment_time,
             doctor=doctor,
             appointment_status="Pending"
         )
@@ -251,6 +255,8 @@ def confirm_appointment(request):
                         <li><strong>Specialization:</strong> {doctor.specialization}</li>
                         <li><strong>OP Timings:</strong> {doctor.op_timings}</li>
                         <li><strong>Room Number:</strong> {doctor.room_number}</li>
+                        <li><strong>Appointment Date:</strong> {appointment_date}</li>
+                        <li><strong>Appointment Time:</strong> {appointment_time}</li>
                     </ul>
 
                     <p>Thank you for choosing Sravan Hospital.</p>
@@ -263,7 +269,9 @@ def confirm_appointment(request):
         return render(request, 'appointments/success.html', {
             'doctor': doctor,
             'patient_name': patient_name,
-            'email_status': email_status
+            'email_status': email_status,
+            'appointment_date': appointment_date,
+            'appointment_time': appointment_time
         })
 
     return render(request, 'appointments/success.html')

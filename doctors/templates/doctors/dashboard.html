@@ -424,7 +424,24 @@
 
                     <div class="box">
                         <h3>Appointment Date</h3>
-                        <p>{{ appointment.created_at|date:"d M Y" }}</p>
+                        <p>
+                            {% if appointment.appointment_date %}
+                                {{ appointment.appointment_date|date:"d M Y" }}
+                            {% else %}
+                                {{ appointment.created_at|date:"d M Y" }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="box">
+                        <h3>Appointment Time</h3>
+                        <p>
+                            {% if appointment.appointment_time %}
+                                {{ appointment.appointment_time|time:"h:i A" }}
+                            {% else %}
+                                Not selected
+                            {% endif %}
+                        </p>
                     </div>
 
                 </div>

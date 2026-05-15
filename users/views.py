@@ -39,12 +39,18 @@ def login_view(request):
 
     if request.method == "POST":
 
-        username = request.POST.get('username')
+        username = request.POST.get('username', '').strip()
         password = request.POST.get('password')
+
+        normalized_username = username.upper()
+
+        if normalized_username.isdigit():
+
+            normalized_username = f"DOC{normalized_username}"
 
         user = authenticate(
             request,
-            username=username,
+            username=normalized_username,
             password=password
         )
 
@@ -52,7 +58,10 @@ def login_view(request):
 
             login(request, user)
 
-            # BOTH doctor and patient go to home
+            if user.is_staff and user.username.startswith("DOC"):
+
+                return redirect('/doctors/dashboard/')
+
             return redirect('/')
 
         else:

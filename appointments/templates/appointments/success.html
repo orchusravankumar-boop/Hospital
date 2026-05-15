@@ -51,6 +51,13 @@
             has been booked successfully.
         </p>
 
+        {% if appointment_date and appointment_time %}
+            <p>
+                Appointment Date: <b>{{ appointment_date }}</b><br>
+                Appointment Time: <b>{{ appointment_time }}</b>
+            </p>
+        {% endif %}
+
         {% if email_status == "sent" %}
             <p>A confirmation email has been sent to your email address.</p>
         {% else %}

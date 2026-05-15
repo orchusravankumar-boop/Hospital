@@ -130,8 +130,21 @@
                 </p>
 
                 <p>
-                    <b>Booked On:</b>
-                    {{ appointment.created_at }}
+                    <b>Appointment Date:</b>
+                    {% if appointment.appointment_date %}
+                        {{ appointment.appointment_date|date:"d M Y" }}
+                    {% else %}
+                        Not selected
+                    {% endif %}
+                </p>
+
+                <p>
+                    <b>Appointment Time:</b>
+                    {% if appointment.appointment_time %}
+                        {{ appointment.appointment_time|time:"h:i A" }}
+                    {% else %}
+                        Not selected
+                    {% endif %}
                 </p>
 
                 {% if appointment.appointment_status == "Pending" %}

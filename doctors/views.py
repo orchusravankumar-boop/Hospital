@@ -67,7 +67,7 @@ def doctor_dashboard(request):
         if selected_date:
 
             appointments = appointments.filter(
-                created_at__date=selected_date
+                appointment_date=selected_date
             )
 
         appointments = appointments.order_by('-created_at')
