@@ -167,5 +167,8 @@ ANYMAIL = {
 }
 DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
 RESEND_API_KEY = config("RESEND_API_KEY", default="")
-GEMINI_API_KEY = config("GEMINI_API_KEY", default="")
+GEMINI_API_KEY = config(
+    "GEMINI_API_KEY",
+    default=config("GOOGLE_API_KEY", default="")
+)
 GEMINI_MODEL = config("GEMINI_MODEL", default="gemini-2.5-flash")

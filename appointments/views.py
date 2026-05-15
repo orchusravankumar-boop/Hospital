@@ -1,6 +1,7 @@
 import json
 import resend
 from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import render
 from google import genai
 from doctors.models import Doctor
@@ -266,3 +267,26 @@ def confirm_appointment(request):
         })
 
     return render(request, 'appointments/success.html')
+
+
+def gemini_test(request):
+    doctors = Doctor.objects.all()
+
+    if not doctors.exists():
+        seed_default_doctors_and_staff()
+        doctors = Doctor.objects.all()
+
+    result = gemini_symptom_analysis(
+        "I have chest pain and fast heartbeat",
+        doctors
+    )
+
+    return JsonResponse({
+        "has_gemini_key": bool(settings.GEMINI_API_KEY),
+        "gemini_model": settings.GEMINI_MODEL,
+        "doctor_count": doctors.count(),
+        "analysis_source": result["source"],
+        "recommended_department": result["department"],
+        "explanation": result["explanation"],
+        "note": result["note"],
+    })

@@ -15,4 +15,10 @@ urlpatterns = [
         name='confirm_appointment'
     ),
 
+    path(
+        'gemini-test/',
+        views.gemini_test,
+        name='gemini_test'
+    ),
+
 ]
