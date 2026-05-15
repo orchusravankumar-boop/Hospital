@@ -3,7 +3,7 @@ services:
     name: sravhms
     runtime: python
     buildCommand: ./build.sh
-    startCommand: gunicorn sravhms.wsgi:application
+    startCommand: gunicorn sravhms.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DEBUG
         value: False
