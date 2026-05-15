@@ -32,6 +32,18 @@ def normalize_doctor_username(username):
     return normalized_username
 
 
+def is_doctor_login_username(username):
+    normalized_username = username.strip().upper()
+
+    return (
+        normalized_username.isdigit()
+        or (
+            normalized_username.startswith("DOC")
+            and normalized_username[3:].isdigit()
+        )
+    )
+
+
 def authenticate_doctor_with_password_variants(username, password):
     user = User.objects.filter(
         username=username,
@@ -102,24 +114,43 @@ def login_view(request):
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password')
 
-        normalized_username = normalize_doctor_username(username)
-
-        if normalized_username.startswith("DOC"):
-
-            seed_default_doctors_and_staff()
-
         user = authenticate(
             request,
-            username=normalized_username,
+            username=username,
             password=password
         )
 
-        if user is None and normalized_username.startswith("DOC"):
+        if user is None and not is_doctor_login_username(username):
 
-            user = authenticate_doctor_with_password_variants(
-                normalized_username,
-                password
+            existing_user = User.objects.filter(
+                username__iexact=username
+            ).first()
+
+            if existing_user:
+
+                user = authenticate(
+                    request,
+                    username=existing_user.username,
+                    password=password
+                )
+
+        if user is None and is_doctor_login_username(username):
+
+            seed_default_doctors_and_staff()
+            normalized_username = normalize_doctor_username(username)
+
+            user = authenticate(
+                request,
+                username=normalized_username,
+                password=password
             )
+
+            if user is None:
+
+                user = authenticate_doctor_with_password_variants(
+                    normalized_username,
+                    password
+                )
 
         if user is not None:
 

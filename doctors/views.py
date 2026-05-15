@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 from doctors.models import Doctor
+from doctors.seed_data import seed_default_doctors_and_staff
 from appointments.models import Appointment
 
 
@@ -13,6 +15,17 @@ def get_doctor_for_user(user):
     if doctor:
         return doctor
 
+    if user.username.startswith("DOC"):
+
+        seed_default_doctors_and_staff()
+
+        doctor = Doctor.objects.filter(
+            doctor_id=user.username
+        ).first()
+
+        if doctor:
+            return doctor
+
     full_name = user.get_full_name().strip()
 
     if full_name:
@@ -21,6 +34,20 @@ def get_doctor_for_user(user):
         ).first()
 
     return doctor
+
+
+def get_related_doctors(doctor):
+    if not doctor:
+
+        return Doctor.objects.none()
+
+    return Doctor.objects.filter(
+        Q(id=doctor.id)
+        | Q(
+            name__iexact=doctor.name,
+            specialization__iexact=doctor.specialization
+        )
+    )
 
 
 # DOCTOR LIST
@@ -54,8 +81,10 @@ def doctor_dashboard(request):
 
     if doctor:
 
+        related_doctors = get_related_doctors(doctor)
+
         appointments = Appointment.objects.filter(
-            doctor=doctor
+            doctor__in=related_doctors
         )
 
         if status_filter and status_filter != "All":
@@ -94,10 +123,11 @@ def update_status(request, appointment_id):
         return redirect('/')
 
     doctor = get_doctor_for_user(request.user)
+    related_doctors = get_related_doctors(doctor)
 
     appointment = Appointment.objects.get(
         id=appointment_id,
-        doctor=doctor
+        doctor__in=related_doctors
     )
 
     if request.method == "POST":
