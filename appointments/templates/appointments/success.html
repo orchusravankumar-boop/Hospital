@@ -60,7 +60,12 @@
         {% if email_status == "sent" %}
             <p>A confirmation email has been sent to your email address.</p>
         {% else %}
-            <p>Your appointment is saved. Email could not be sent because Resend is still in testing mode.</p>
+            <p>Your appointment is saved, but email could not be sent.</p>
+            {% if email_error %}
+                <p style="font-size:14px; color:#666;">
+                    {{ email_error }}
+                </p>
+            {% endif %}
         {% endif %}
 
         <p>

@@ -237,41 +237,51 @@ def confirm_appointment(request):
             appointment_status="Pending"
         )
 
-        resend.api_key = settings.RESEND_API_KEY
-
         email_status = "sent"
+        email_error = ""
 
-        try:
-            resend.Emails.send({
-                "from": "Sravan Hospital <onboarding@resend.dev>",
-                "to": [email],
-                "subject": "Appointment Confirmation - Sravan Hospital",
-                "html": f"""
-                    <h1>Appointment Confirmed</h1>
-                    <p>Hello {patient_name},</p>
-                    <p>Your appointment has been successfully booked.</p>
+        if not settings.RESEND_API_KEY:
 
-                    <h3>Doctor Details</h3>
-                    <ul>
-                        <li><strong>Doctor:</strong> Dr. {doctor.name}</li>
-                        <li><strong>Specialization:</strong> {doctor.specialization}</li>
-                        <li><strong>OP Timings:</strong> {doctor.op_timings}</li>
-                        <li><strong>Room Number:</strong> {doctor.room_number}</li>
-                        <li><strong>Appointment Date:</strong> {appointment_date}</li>
-                        <li><strong>Appointment Time:</strong> {appointment_time}</li>
-                    </ul>
-
-                    <p>Thank you for choosing Sravan Hospital.</p>
-                """
-            })
-        except Exception as error:
             email_status = "failed"
-            print("Appointment email failed:", error)
+            email_error = "Resend API key is missing."
+
+        else:
+
+            resend.api_key = settings.RESEND_API_KEY
+
+            try:
+                resend.Emails.send({
+                    "from": "Sravan Hospital <onboarding@resend.dev>",
+                    "to": [email],
+                    "subject": "Appointment Confirmation - Sravan Hospital",
+                    "html": f"""
+                        <h1>Appointment Confirmed</h1>
+                        <p>Hello {patient_name},</p>
+                        <p>Your appointment has been successfully booked.</p>
+
+                        <h3>Doctor Details</h3>
+                        <ul>
+                            <li><strong>Doctor:</strong> Dr. {doctor.name}</li>
+                            <li><strong>Specialization:</strong> {doctor.specialization}</li>
+                            <li><strong>OP Timings:</strong> {doctor.op_timings}</li>
+                            <li><strong>Room Number:</strong> {doctor.room_number}</li>
+                            <li><strong>Appointment Date:</strong> {appointment_date}</li>
+                            <li><strong>Appointment Time:</strong> {appointment_time}</li>
+                        </ul>
+
+                        <p>Thank you for choosing Sravan Hospital.</p>
+                    """
+                })
+            except Exception as error:
+                email_status = "failed"
+                email_error = str(error)
+                print("Appointment email failed:", error)
 
         return render(request, 'appointments/success.html', {
             'doctor': doctor,
             'patient_name': patient_name,
             'email_status': email_status,
+            'email_error': email_error,
             'appointment_date': appointment_date,
             'appointment_time': appointment_time,
             'appointment': appointment
