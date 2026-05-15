@@ -34,7 +34,7 @@
 
             align-items:center;
 
-            overflow:hidden;
+            overflow:auto;
 
             position:relative;
 
@@ -91,7 +91,7 @@
 
             max-width:1180px;
 
-            height:700px;
+            min-height:700px;
 
             display:flex;
 
@@ -167,7 +167,7 @@
 
         .hero-title{
 
-            font-size:68px;
+            font-size:clamp(42px,6vw,68px);
 
             font-weight:800;
 
@@ -397,8 +397,10 @@
                 flex-direction:column;
 
                 height:auto;
+                min-height:0;
 
                 width:95%;
+                margin:24px 0;
             }
 
             .left-panel,
@@ -425,6 +427,64 @@
             .brand span{
 
                 font-size:32px;
+            }
+        }
+
+        @media(max-width:560px){
+
+            body{
+                align-items:flex-start;
+                padding:16px;
+            }
+
+            .signup-container{
+                width:100%;
+                border-radius:20px;
+                margin:0;
+            }
+
+            .left-panel,
+            .right-panel{
+                padding:34px 22px;
+            }
+
+            .brand{
+                gap:10px;
+                margin-bottom:42px;
+            }
+
+            .brand span{
+                font-size:24px;
+            }
+
+            .hero-title{
+                font-size:34px;
+            }
+
+            .hero-subtitle,
+            .form-subtitle{
+                font-size:15px;
+            }
+
+            .features{
+                gap:12px;
+            }
+
+            .feature-card{
+                width:100%;
+                min-width:0;
+                padding:14px 16px;
+                border-radius:14px;
+            }
+
+            .form-title{
+                font-size:34px;
+            }
+
+            .input-group input,
+            .signup-btn{
+                padding:14px;
+                font-size:16px;
             }
         }
 

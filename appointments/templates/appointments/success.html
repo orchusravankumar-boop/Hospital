@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Appointment Confirmed</title>
 
     <style>
@@ -8,12 +10,14 @@
             font-family: Arial;
             background: #f4f4f4;
             text-align: center;
-            padding-top: 100px;
+            padding: 100px 16px 40px;
+            margin: 0;
+            color: #111827;
         }
 
         .box {
             background: white;
-            width: 500px;
+            width: min(500px, 100%);
             margin: auto;
             padding: 40px;
             border-radius: 10px;
@@ -25,7 +29,8 @@
         }
 
         p {
-            font-size: 20px;
+            font-size: clamp(16px, 3vw, 20px);
+            line-height: 1.55;
         }
 
         .btn {
@@ -36,6 +41,21 @@
             color: white;
             text-decoration: none;
             border-radius: 5px;
+        }
+
+        @media(max-width:560px){
+            body {
+                padding-top: 32px;
+            }
+
+            .box {
+                padding: 24px 18px;
+            }
+
+            .btn {
+                display: block;
+                margin: 14px 0 0;
+            }
         }
     </style>
 </head>

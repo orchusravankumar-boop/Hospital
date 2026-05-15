@@ -2,6 +2,8 @@
 <html>
 <head>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>AI Result</title>
 
     <style>
@@ -9,10 +11,12 @@
         body{
             font-family:Arial;
             background:#f5f5f5;
+            margin:0;
+            color:#111827;
         }
 
         .container{
-            width:70%;
+            width:min(900px,92%);
             margin:auto;
             margin-top:50px;
         }
@@ -23,6 +27,14 @@
             border-radius:10px;
         }
 
+        h1{
+            font-size:clamp(28px,5vw,40px);
+        }
+
+        p{
+            line-height:1.6;
+        }
+
         .btn{
             display:inline-block;
             margin-top:20px;
@@ -31,6 +43,23 @@
             color:white;
             text-decoration:none;
             border-radius:5px;
+        }
+
+        @media(max-width:560px){
+            .container{
+                width:94%;
+                margin-top:24px;
+            }
+
+            .card{
+                padding:22px 18px;
+            }
+
+            .btn{
+                display:block;
+                text-align:center;
+                padding:13px 18px;
+            }
         }
 
     </style>
