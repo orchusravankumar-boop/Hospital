@@ -4,6 +4,31 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from appointments.models import Appointment
+from doctors.seed_data import seed_default_doctors_and_staff
+
+
+def normalize_doctor_username(username):
+    normalized_username = username.strip().upper()
+
+    if normalized_username.isdigit():
+
+        doctor_number = int(normalized_username)
+
+        if 1 <= doctor_number <= 10:
+
+            return f"DOC{doctor_number + 101}"
+
+        return f"DOC{doctor_number}"
+
+    if normalized_username.startswith("DOC") and normalized_username[3:].isdigit():
+
+        doctor_number = int(normalized_username[3:])
+
+        if 1 <= doctor_number <= 10:
+
+            return f"DOC{doctor_number + 101}"
+
+    return normalized_username
 
 
 # SIGNUP
@@ -42,11 +67,11 @@ def login_view(request):
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password')
 
-        normalized_username = username.upper()
+        normalized_username = normalize_doctor_username(username)
 
-        if normalized_username.isdigit():
+        if normalized_username.startswith("DOC"):
 
-            normalized_username = f"DOC{normalized_username}"
+            seed_default_doctors_and_staff()
 
         user = authenticate(
             request,
