@@ -647,6 +647,14 @@
                 Logout
             </a>
 
+            {% if not request.user.is_staff %}
+
+                <a href="/my-appointments/" class="login-btn">
+                    My Appointments
+                </a>
+
+            {% endif %}
+
         {% else %}
 
             <a href="/login/" class="login-btn">

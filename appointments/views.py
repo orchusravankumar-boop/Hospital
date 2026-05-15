@@ -2,7 +2,8 @@ import json
 import resend
 from django.conf import settings
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.contrib.auth.decorators import login_required
 from google import genai
 from doctors.models import Doctor
 from doctors.seed_data import seed_default_doctors_and_staff
@@ -212,6 +213,7 @@ def appointment_page(request):
     })
 
 
+@login_required(login_url='/login/')
 def confirm_appointment(request):
     if request.method == "POST":
         doctor_id = request.POST.get('doctor')
@@ -224,8 +226,8 @@ def confirm_appointment(request):
 
         doctor = Doctor.objects.get(id=doctor_id)
 
-        Appointment.objects.create(
-            user=request.user if request.user.is_authenticated else None,
+        appointment = Appointment.objects.create(
+            user=request.user,
             patient_name=patient_name,
             phone=phone,
             age=age,
@@ -271,10 +273,11 @@ def confirm_appointment(request):
             'patient_name': patient_name,
             'email_status': email_status,
             'appointment_date': appointment_date,
-            'appointment_time': appointment_time
+            'appointment_time': appointment_time,
+            'appointment': appointment
         })
 
-    return render(request, 'appointments/success.html')
+    return redirect('/appointments/')
 
 
 def gemini_test(request):

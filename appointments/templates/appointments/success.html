@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Appointment Confirmed</title>
-    <meta http-equiv="refresh" content="3;url=/marketing/">
 
     <style>
         body {
@@ -64,9 +63,13 @@
             <p>Your appointment is saved. Email could not be sent because Resend is still in testing mode.</p>
         {% endif %}
 
-        <p>Redirecting to home page in 3 seconds...</p>
+        <p>
+            Current Status:
+            <b>{{ appointment.appointment_status|default:"Pending" }}</b>
+        </p>
 
-        <a href="/marketing/" class="btn">Go To Home Now</a>
+        <a href="/my-appointments/" class="btn">View Appointment Status</a>
+        <a href="/marketing/" class="btn">Go To Home</a>
     </div>
 </body>
 </html>
