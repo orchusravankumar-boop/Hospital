@@ -71,7 +71,37 @@
             font-size:55px;
             font-weight:700;
             color:#0f172a;
+            margin-bottom:20px;
+        }
+
+        .doctor-info{
+            background:white;
+            padding:25px 30px;
+            border-radius:20px;
             margin-bottom:40px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.05);
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:20px;
+        }
+
+        .doctor-info div{
+            background:#f5f7ff;
+            padding:18px;
+            border-radius:14px;
+        }
+
+        .doctor-info span{
+            display:block;
+            color:#2563eb;
+            font-weight:700;
+            margin-bottom:8px;
+        }
+
+        .doctor-info p{
+            color:#111827;
+            font-size:18px;
+            font-weight:600;
         }
 
         /* FILTER */
@@ -211,6 +241,10 @@
                 grid-template-columns:1fr;
             }
 
+            .doctor-info{
+                grid-template-columns:repeat(2,1fr);
+            }
+
         }
 
         @media(max-width:700px){
@@ -227,6 +261,10 @@
                 padding:20px;
             }
 
+            .doctor-info{
+                grid-template-columns:1fr;
+            }
+
         }
 
     </style>
@@ -238,7 +276,7 @@
     <div class="navbar">
 
         <div class="logo">
-            🏥 Sravan Hospital
+            Sravan Hospital
         </div>
 
         <div class="right-nav">
@@ -258,8 +296,36 @@
     <div class="container">
 
         <div class="heading">
-            Welcome Dr. {{ doctor.name }}
+            Welcome Dr. {{ doctor_name }}
         </div>
+
+        {% if doctor %}
+
+            <div class="doctor-info">
+
+                <div>
+                    <span>Doctor ID</span>
+                    <p>{{ doctor.doctor_id }}</p>
+                </div>
+
+                <div>
+                    <span>Specialization</span>
+                    <p>{{ doctor.specialization }}</p>
+                </div>
+
+                <div>
+                    <span>Room Number</span>
+                    <p>{{ doctor.room_number }}</p>
+                </div>
+
+                <div>
+                    <span>OP Timings</span>
+                    <p>{{ doctor.op_timings }}</p>
+                </div>
+
+            </div>
+
+        {% endif %}
 
         <!-- FILTER -->
 

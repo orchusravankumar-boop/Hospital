@@ -5,6 +5,24 @@ from doctors.models import Doctor
 from appointments.models import Appointment
 
 
+def get_doctor_for_user(user):
+    doctor = Doctor.objects.filter(
+        doctor_id=user.username
+    ).first()
+
+    if doctor:
+        return doctor
+
+    full_name = user.get_full_name().strip()
+
+    if full_name:
+        doctor = Doctor.objects.filter(
+            name__iexact=full_name
+        ).first()
+
+    return doctor
+
+
 # DOCTOR LIST
 def doc_list(request):
 
@@ -27,23 +45,32 @@ def doctor_dashboard(request):
 
         return redirect('/')
 
-    doctor = Doctor.objects.filter(
-        doctor_id=request.user.username
-    ).first()
+    doctor = get_doctor_for_user(request.user)
 
     status_filter = request.GET.get('status')
+    selected_date = request.GET.get('date')
 
-    appointments = Appointment.objects.filter(
-        doctor=doctor
-    )
+    appointments = Appointment.objects.none()
 
-    if status_filter and status_filter != "All":
+    if doctor:
 
-        appointments = appointments.filter(
-            appointment_status=status_filter
+        appointments = Appointment.objects.filter(
+            doctor=doctor
         )
 
-    appointments = appointments.order_by('-created_at')
+        if status_filter and status_filter != "All":
+
+            appointments = appointments.filter(
+                appointment_status=status_filter
+            )
+
+        if selected_date:
+
+            appointments = appointments.filter(
+                created_at__date=selected_date
+            )
+
+        appointments = appointments.order_by('-created_at')
 
     return render(
         request,
@@ -51,7 +78,9 @@ def doctor_dashboard(request):
         {
             'appointments': appointments,
             'doctor': doctor,
-            'selected_status': status_filter
+            'doctor_name': doctor.name if doctor else request.user.username,
+            'selected_status': status_filter,
+            'selected_date': selected_date
         }
     )
 
@@ -64,8 +93,11 @@ def update_status(request, appointment_id):
 
         return redirect('/')
 
+    doctor = get_doctor_for_user(request.user)
+
     appointment = Appointment.objects.get(
-        id=appointment_id
+        id=appointment_id,
+        doctor=doctor
     )
 
     if request.method == "POST":

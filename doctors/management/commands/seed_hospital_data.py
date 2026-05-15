@@ -11,7 +11,8 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"Doctors created={result['created_doctors']}, updated={result['updated_doctors']}; "
+                f"Doctors deleted={result['deleted_doctors']}, "
+                f"created={result['created_doctors']}, updated={result['updated_doctors']}; "
                 f"staff users created={result['created_users']}, updated={result['updated_users']}"
             )
         )
