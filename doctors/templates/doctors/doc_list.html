@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctors</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f5f5f5;
+            padding:40px;
+        }
+
+        .card{
+            background:white;
+            padding:20px;
+            margin-bottom:20px;
+            border-radius:10px;
+            box-shadow:0px 0px 10px lightgray;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<h1>Doctors List</h1>
+
+{% for doctor in doctors %}
+
+<div class="card">
+
+    <h2>Dr. {{ doctor.name }}</h2>
+
+    <p><b>Specialization:</b> {{ doctor.specialization }}</p>
+
+    <p><b>Phone:</b> {{ doctor.phone }}</p>
+
+    <p><b>OP Timings:</b> {{ doctor.op_timings }}</p>
+
+    <p><b>Room Number:</b> {{ doctor.room_number }}</p>
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>

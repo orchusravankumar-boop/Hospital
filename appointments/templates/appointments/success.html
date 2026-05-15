@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appointment Confirmed</title>
+    <meta http-equiv="refresh" content="3;url=/marketing/">
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .box {
+            background: white;
+            width: 500px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: green;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 25px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h1>Appointment Confirmed</h1>
+
+        <p>
+            Hello <b>{{ patient_name }}</b>, your appointment with
+            <b>Dr. {{ doctor.name }}</b>
+            has been booked successfully.
+        </p>
+
+        {% if email_status == "sent" %}
+            <p>A confirmation email has been sent to your email address.</p>
+        {% else %}
+            <p>Your appointment is saved. Email could not be sent because Resend is still in testing mode.</p>
+        {% endif %}
+
+        <p>Redirecting to home page in 3 seconds...</p>
+
+        <a href="/marketing/" class="btn">Go To Home Now</a>
+    </div>
+</body>
+</html>

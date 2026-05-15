@@ -1,0 +1,9 @@
+<h1> Patients </h1>
+    
+    {% for p in patients %}
+     <p> {{ p.id }} - {{ p.name }} - {{ p.phone }}</p>
+    {% endfor %}
+<td>
+        <a href="/patients/{{ p.id }}/edit" class="btn btn-sm btn-primary">Edit</a>
+         <a href="/patients/{{ p.id }}/delete" class="btn btn-sm btn-danger ms-2">Delete</a>
+    </td>

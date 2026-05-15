@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Login - Sravan Hospital</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+
+            min-height:100vh;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            padding:40px;
+
+            background:
+            linear-gradient(
+                rgba(8,20,45,0.70),
+                rgba(8,20,45,0.70)
+            ),
+
+            url('https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?q=80&w=1600&auto=format&fit=crop');
+
+            background-size:cover;
+            background-position:center;
+
+            overflow:auto;
+        }
+
+        .main-container{
+
+            width:1100px;
+
+            min-height:650px;
+
+            display:flex;
+
+            border-radius:30px;
+
+            overflow:hidden;
+
+            background:rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(12px);
+
+            box-shadow:0px 20px 50px rgba(0,0,0,0.35);
+        }
+
+        /* LEFT SECTION */
+
+        .left-section{
+
+            flex:1;
+
+            padding:60px;
+
+            color:white;
+
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+        }
+
+        .logo{
+
+            display:flex;
+            align-items:center;
+
+            gap:14px;
+
+            margin-bottom:60px;
+        }
+
+        .logo span{
+
+            font-size:32px;
+
+            font-weight:700;
+        }
+
+        .left-section h1{
+
+            font-size:64px;
+
+            line-height:1.15;
+
+            margin-bottom:25px;
+
+            font-weight:700;
+        }
+
+        .left-section p{
+
+            font-size:22px;
+
+            line-height:1.8;
+
+            color:#e8e8e8;
+
+            max-width:520px;
+        }
+
+        .features{
+
+            margin-top:40px;
+
+            display:flex;
+            flex-direction:column;
+
+            gap:18px;
+        }
+
+        .feature{
+
+            font-size:18px;
+        }
+
+        /* RIGHT SECTION */
+
+        .right-section{
+
+            width:420px;
+
+            background:white;
+
+            padding:55px 45px;
+
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+        }
+
+        .login-title{
+
+            font-size:40px;
+
+            font-weight:700;
+
+            color:#0d1b3d;
+
+            margin-bottom:10px;
+        }
+
+        .login-subtitle{
+
+            color:#666;
+
+            margin-bottom:35px;
+        }
+
+        .form-group{
+
+            margin-bottom:25px;
+        }
+
+        .form-group label{
+
+            display:block;
+
+            margin-bottom:10px;
+
+            color:#0d1b3d;
+
+            font-weight:500;
+        }
+
+        .form-group input{
+
+            width:100%;
+
+            padding:17px;
+
+            border-radius:12px;
+
+            border:1px solid #ccc;
+
+            font-size:16px;
+
+            outline:none;
+
+            transition:0.3s;
+        }
+
+        .form-group input:focus{
+
+            border-color:#0d6efd;
+
+            box-shadow:0px 0px 10px rgba(13,110,253,0.2);
+        }
+
+        .login-btn{
+
+            width:100%;
+
+            padding:18px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:linear-gradient(
+                135deg,
+                #0d6efd,
+                #4b4fd1
+            );
+
+            color:white;
+
+            font-size:20px;
+
+            font-weight:600;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .login-btn:hover{
+
+            transform:translateY(-2px);
+
+            box-shadow:0px 10px 20px rgba(13,110,253,0.25);
+        }
+
+        .signup-text{
+
+            margin-top:30px;
+
+            text-align:center;
+
+            color:#555;
+        }
+
+        .signup-text a{
+
+            color:#0d6efd;
+
+            text-decoration:none;
+
+            font-weight:600;
+        }
+
+        .error{
+
+            background:#ff4d4d;
+
+            color:white;
+
+            padding:14px;
+
+            border-radius:10px;
+
+            margin-bottom:20px;
+
+            text-align:center;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:1000px){
+
+            .main-container{
+
+                flex-direction:column;
+
+                width:100%;
+            }
+
+            .left-section{
+
+                padding:50px 35px;
+            }
+
+            .left-section h1{
+
+                font-size:44px;
+            }
+
+            .left-section p{
+
+                font-size:18px;
+            }
+
+            .right-section{
+
+                width:100%;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main-container">
+
+        <!-- LEFT SIDE -->
+
+        <div class="left-section">
+
+            <div class="logo">
+
+                <div style="font-size:45px;">
+                    🏥
+                </div>
+
+                <span>
+                    Sravan Hospital
+                </span>
+
+            </div>
+
+            <h1>
+
+                Smart Healthcare <br>
+
+                Starts Here
+
+            </h1>
+
+            <p>
+
+                AI powered hospital management system for
+                smart appointment booking, doctor monitoring,
+                and patient healthcare management.
+
+            </p>
+
+            <div class="features">
+
+                <div class="feature">
+
+                    ✅ AI Health Assistant
+
+                </div>
+
+                <div class="feature">
+
+                    ✅ Real-time Appointment Tracking
+
+                </div>
+
+                <div class="feature">
+
+                    ✅ Doctor Dashboard Management
+
+                </div>
+
+                <div class="feature">
+
+                    ✅ Secure Patient Records
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+
+        <div class="right-section">
+
+            <div class="login-title">
+
+                Login
+
+            </div>
+
+            <div class="login-subtitle">
+
+                Access your hospital dashboard
+
+            </div>
+
+            {% if error %}
+
+            <div class="error">
+
+                {{ error }}
+
+            </div>
+
+            {% endif %}
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label>
+
+                        Username / Doctor ID
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Enter username"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Password
+
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+
+                    Login
+
+                </button>
+
+            </form>
+
+            <div class="signup-text">
+
+                Don’t have an account?
+
+                <a href="/signup/">
+
+                    Signup
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

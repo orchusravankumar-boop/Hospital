@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Appointment</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .analysis-box {
+            background: #e8f7ec;
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 35px;
+        }
+
+        .analysis-box h1 {
+            color: #07822d;
+            margin-top: 0;
+        }
+
+        .doctor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+            margin-bottom: 40px;
+        }
+
+        .doctor-card,
+        .form-card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        .doctor-card h2 {
+            color: #0f766e;
+            margin-top: 0;
+        }
+
+        .doctor-card p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .selected-doctor-card {
+            display: none;
+            margin-top: 18px;
+            padding: 20px;
+            border: 1px solid #cde7e3;
+            border-radius: 12px;
+            background: #f0fdfa;
+        }
+
+        .selected-doctor-card h2 {
+            margin-top: 0;
+            color: #0f766e;
+        }
+
+        .selected-doctor-card p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 25px;
+            background: #0f766e;
+            color: white;
+            border: none;
+            padding: 14px 26px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #115e59;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        {% if symptom %}
+            <div class="analysis-box">
+                <h1>AI Health Analysis</h1>
+                <p>{{ explanation }}</p>
+            </div>
+        {% endif %}
+
+        {% if ai_mode %}
+            <h1>Recommended Doctors</h1>
+
+            <div class="doctor-grid">
+                {% for doctor in recommended_doctors %}
+                    <div class="doctor-card">
+                        <h2>Dr. {{ doctor.name }}</h2>
+                        <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                        <p><strong>OP Timings:</strong> {{ doctor.op_timings }}</p>
+                        <p><strong>Room Number:</strong> {{ doctor.room_number }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="form-card">
+            <h1>Book Appointment</h1>
+
+            <form method="POST" action="{% url 'confirm_appointment' %}">
+                {% csrf_token %}
+
+                {% if ai_mode %}
+                    {% if selected_doctor %}
+                        <input type="hidden" name="doctor" value="{{ selected_doctor.id }}">
+                    {% endif %}
+                {% else %}
+                    <label>Select Doctor</label>
+                    <select name="doctor" required>
+                        <option value="">Choose Doctor</option>
+
+                        {% for doctor in doctors %}
+                            <option
+                                value="{{ doctor.id }}"
+                                data-name="{{ doctor.name }}"
+                                data-specialization="{{ doctor.specialization }}"
+                                data-op-timings="{{ doctor.op_timings }}"
+                                data-room-number="{{ doctor.room_number }}"
+                            >
+                                Dr. {{ doctor.name }} - {{ doctor.specialization }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <div id="selectedDoctorCard" class="selected-doctor-card">
+                        <h2 id="selectedDoctorName"></h2>
+                        <p><strong>Specialization:</strong> <span id="selectedDoctorSpecialization"></span></p>
+                        <p><strong>OP Timings:</strong> <span id="selectedDoctorTimings"></span></p>
+                        <p><strong>Room Number:</strong> <span id="selectedDoctorRoom"></span></p>
+                    </div>
+                {% endif %}
+
+                <label>Patient Name</label>
+                <input type="text" name="patient_name" required>
+
+                <label>Phone Number</label>
+                <input type="text" name="phone" required>
+
+                <label>Email</label>
+                <input type="email" name="email" required>
+
+                <label>Age</label>
+                <input type="number" name="age" required>
+
+                <button type="submit">Confirm Appointment</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        const doctorSelect = document.querySelector('select[name="doctor"]');
+        const selectedDoctorCard = document.getElementById('selectedDoctorCard');
+
+        if (doctorSelect && selectedDoctorCard) {
+            doctorSelect.addEventListener('change', function () {
+                const selectedOption = this.options[this.selectedIndex];
+
+                if (!selectedOption.value) {
+                    selectedDoctorCard.style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('selectedDoctorName').textContent = 'Dr. ' + selectedOption.dataset.name;
+                document.getElementById('selectedDoctorSpecialization').textContent = selectedOption.dataset.specialization;
+                document.getElementById('selectedDoctorTimings').textContent = selectedOption.dataset.opTimings;
+                document.getElementById('selectedDoctorRoom').textContent = selectedOption.dataset.roomNumber;
+
+                selectedDoctorCard.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
