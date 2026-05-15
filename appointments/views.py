@@ -4,6 +4,7 @@ from django.conf import settings
 from django.shortcuts import render
 from google import genai
 from doctors.models import Doctor
+from doctors.seed_data import seed_default_doctors_and_staff
 from appointments.models import Appointment
 
 
@@ -158,6 +159,12 @@ def appointment_page(request):
     explanation = ""
 
     doctors = Doctor.objects.all()
+
+    if not doctors.exists():
+        seed_result = seed_default_doctors_and_staff()
+        print("Default doctors seeded automatically:", seed_result)
+        doctors = Doctor.objects.all()
+
     recommended_doctors = doctors
 
     if symptom == "":
