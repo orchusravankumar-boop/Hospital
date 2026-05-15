@@ -44,6 +44,15 @@ def fallback_symptom_analysis(symptom):
     return "General Physician", "General medical consultation is recommended based on the provided symptoms."
 
 
+def analysis_result(department, explanation, source, note=""):
+    return {
+        "department": department,
+        "explanation": explanation,
+        "source": source,
+        "note": note,
+    }
+
+
 def clean_gemini_json(response_text):
     cleaned_text = response_text.strip()
 
@@ -66,8 +75,23 @@ def gemini_symptom_analysis(symptom, doctors):
 
     fallback_department, fallback_explanation = fallback_symptom_analysis(symptom)
 
-    if not settings.GEMINI_API_KEY or not specializations:
-        return fallback_department, fallback_explanation
+    if not settings.GEMINI_API_KEY:
+        print("Gemini symptom analysis skipped: GEMINI_API_KEY is missing")
+        return analysis_result(
+            fallback_department,
+            fallback_explanation,
+            "fallback",
+            "Gemini API key is missing."
+        )
+
+    if not specializations:
+        print("Gemini symptom analysis skipped: no doctor specializations found")
+        return analysis_result(
+            fallback_department,
+            fallback_explanation,
+            "fallback",
+            "No doctor specializations found."
+        )
 
     prompt = f"""
 You are assisting a hospital appointment booking page.
@@ -102,12 +126,28 @@ Return only valid JSON in this exact format:
         gemini_explanation = analysis.get("explanation", "").strip()
 
         if gemini_specialization in specializations and gemini_explanation:
-            return gemini_specialization, gemini_explanation
+            print("Gemini symptom analysis used:", gemini_specialization)
+            return analysis_result(
+                gemini_specialization,
+                gemini_explanation,
+                "gemini"
+            )
+
+        print(
+            "Gemini symptom analysis rejected response:",
+            gemini_specialization,
+            response.text
+        )
 
     except Exception as error:
         print("Gemini symptom analysis failed:", error)
 
-    return fallback_department, fallback_explanation
+    return analysis_result(
+        fallback_department,
+        fallback_explanation,
+        "fallback",
+        "Gemini failed, so fallback analysis was used."
+    )
 
 
 # APPOINTMENT PAGE
@@ -136,10 +176,12 @@ def appointment_page(request):
             }
         )
 
-    recommended_department, explanation = gemini_symptom_analysis(
+    analysis = gemini_symptom_analysis(
         symptom,
         doctors
     )
+    recommended_department = analysis["department"]
+    explanation = analysis["explanation"]
 
     recommended_doctors = Doctor.objects.filter(
         specialization__icontains=recommended_department
@@ -156,7 +198,9 @@ def appointment_page(request):
         'selected_doctor': recommended_doctors.first(),
         'doctors': doctors,
         'symptom': symptom,
-        'explanation': explanation
+        'explanation': explanation,
+        'ai_source': analysis["source"],
+        'ai_note': analysis["note"]
     })
 
 
