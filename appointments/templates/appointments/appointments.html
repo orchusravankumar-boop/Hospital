@@ -139,9 +139,29 @@
                 {% csrf_token %}
 
                 {% if ai_mode %}
-                    {% if selected_doctor %}
-                        <input type="hidden" name="doctor" value="{{ selected_doctor.id }}">
-                    {% endif %}
+                    <label>Select Recommended Doctor</label>
+                    <select name="doctor" required>
+                        <option value="">Choose Doctor</option>
+
+                        {% for doctor in recommended_doctors %}
+                            <option
+                                value="{{ doctor.id }}"
+                                data-name="{{ doctor.name }}"
+                                data-specialization="{{ doctor.specialization }}"
+                                data-op-timings="{{ doctor.op_timings }}"
+                                data-room-number="{{ doctor.room_number }}"
+                            >
+                                Dr. {{ doctor.name }} - {{ doctor.specialization }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <div id="selectedDoctorCard" class="selected-doctor-card">
+                        <h2 id="selectedDoctorName"></h2>
+                        <p><strong>Specialization:</strong> <span id="selectedDoctorSpecialization"></span></p>
+                        <p><strong>OP Timings:</strong> <span id="selectedDoctorTimings"></span></p>
+                        <p><strong>Room Number:</strong> <span id="selectedDoctorRoom"></span></p>
+                    </div>
                 {% else %}
                     <label>Select Doctor</label>
                     <select name="doctor" required>
