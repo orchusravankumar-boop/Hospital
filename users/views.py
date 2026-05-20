@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from appointments.models import Appointment
 from doctors.models import Doctor
@@ -143,6 +144,7 @@ def login_view(request):
 
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password')
+        next_url = request.POST.get('next') or request.GET.get('next')
 
         user = authenticate(
             request,
@@ -191,6 +193,13 @@ def login_view(request):
                 return redirect('/doctors/dashboard/')
 
             record_patient_login(user)
+
+            if next_url and url_has_allowed_host_and_scheme(
+                next_url,
+                allowed_hosts={request.get_host()}
+            ):
+
+                return redirect(next_url)
 
             return redirect('/')
 

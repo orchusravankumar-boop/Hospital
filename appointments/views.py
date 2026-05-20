@@ -154,6 +154,7 @@ Return only valid JSON in this exact format:
 
 
 # APPOINTMENT PAGE
+@login_required(login_url='/login/')
 def appointment_page(request):
     symptom = request.GET.get('symptom', '').lower()
 

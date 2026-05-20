@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -624,6 +624,32 @@
             cursor:pointer;
         }
 
+        .assistant-auth-actions{
+            display:flex;
+            gap:10px;
+            padding:0 14px 14px;
+        }
+
+        .assistant-auth-actions a{
+            flex:1;
+            text-align:center;
+            padding:10px 12px;
+            border-radius:8px;
+            text-decoration:none;
+            font-weight:600;
+            font-size:14px;
+        }
+
+        .assistant-login-link{
+            background:#2563eb;
+            color:white;
+        }
+
+        .assistant-signup-link{
+            background:#e8f0ff;
+            color:#1d4ed8;
+        }
+
         @media(max-width:900px){
 
             .navbar{
@@ -732,6 +758,10 @@
             .chatbot-input{
                 flex-direction:column;
             }
+
+            .assistant-auth-actions{
+                flex-direction:column;
+            }
         }
 
     </style>
@@ -745,7 +775,7 @@
     <div class="logo">
 
         <div class="logo-icon">
-            🏥
+            ðŸ¥
         </div>
 
         <div class="logo-text">
@@ -1136,21 +1166,21 @@
     </h2>
 
     <p>
-        📍 Hyderabad, India
+        ðŸ“ Hyderabad, India
     </p>
 
     <p>
-        📞 +91 9876543210
+        ðŸ“ž +91 9876543210
     </p>
 
     <p>
-        ✉ support@sravanhospital.com
+        âœ‰ support@sravanhospital.com
     </p>
 
 </section>
 
 <div class="chatbot-button" onclick="openChatbot()">
-    🤖
+    ðŸ¤–
 </div>
 
 <div class="chatbot-container" id="chatbot">
@@ -1162,7 +1192,7 @@
         </h3>
 
         <span onclick="closeChatbot()">
-            ✖
+            âœ–
         </span>
 
     </div>
@@ -1171,33 +1201,52 @@
 
         <p class="bot-message">
 
-            Hello 👋 <br><br>
+            {% if request.user.is_authenticated %}
 
-            Describe your symptoms and I’ll recommend
-            the right doctor for you.
+                Hello <br><br>
+
+                Describe your symptoms and I will recommend
+                the right doctor for you.
+
+            {% else %}
+
+                Please login or signup to use the AI assistant.
+
+            {% endif %}
 
         </p>
 
     </div>
 
-    <form action="/appointments/" method="GET">
+    {% if request.user.is_authenticated %}
 
-        <div class="chatbot-input">
+        <form action="/appointments/" method="GET">
 
-            <input
-                type="text"
-                name="symptom"
-                placeholder="Type symptoms..."
-                required
-            >
+            <div class="chatbot-input">
 
-            <button type="submit">
-                Send
-            </button>
+                <input
+                    type="text"
+                    name="symptom"
+                    placeholder="Type symptoms..."
+                    required
+                >
 
+                <button type="submit">
+                    Send
+                </button>
+
+            </div>
+
+        </form>
+
+    {% else %}
+
+        <div class="assistant-auth-actions">
+            <a href="/login/?next=/appointments/" class="assistant-login-link">Login</a>
+            <a href="/signup/" class="assistant-signup-link">Signup</a>
         </div>
 
-    </form>
+    {% endif %}
 
 </div>
 
