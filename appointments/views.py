@@ -141,16 +141,29 @@ Return only valid JSON in this exact format:
             gemini_specialization,
             response.text
         )
+        return analysis_result(
+            fallback_department,
+            fallback_explanation,
+            "fallback",
+            "Gemini returned an unusable response, so fallback analysis was used."
+        )
 
     except Exception as error:
-        print("Gemini symptom analysis failed:", error)
+        err_str = str(error)
+        print("Gemini symptom analysis failed:", err_str)
 
-    return analysis_result(
-        fallback_department,
-        fallback_explanation,
-        "fallback",
-        "Gemini failed, so fallback analysis was used."
-    )
+        # Detect expired/invalid API key and provide a clearer note for debugging
+        if 'API key expired' in err_str or 'API_KEY_INVALID' in err_str or ('API key' in err_str and 'expired' in err_str):
+            note = "Gemini API key expired or invalid. Please renew the API key."
+        else:
+            note = "Gemini failed, so fallback analysis was used."
+
+        return analysis_result(
+            fallback_department,
+            fallback_explanation,
+            "fallback",
+            note
+        )
 
 
 # APPOINTMENT PAGE
